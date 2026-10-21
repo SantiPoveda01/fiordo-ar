@@ -1,0 +1,25 @@
+<!DOCTYPE html><html><head><meta charset="utf-8">
+<script type="importmap">{"imports":{"three":"../js/lib/three.module.js","three/addons/":"../js/lib/addons/"}}</script>
+<link rel="stylesheet" href="../css/style.css"><style>body{margin:0;background:#3a4248}</style></head><body>
+<script type="module">
+import * as THREE from 'three';
+import { createProduct } from '../js/product.js';
+import { loadBrandFonts } from '../js/textures.js';
+await loadBrandFonts();
+const r = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+r.setSize(innerWidth, innerHeight); r.setPixelRatio(1); document.body.appendChild(r.domElement);
+const scene = new THREE.Scene();
+const cam = new THREE.PerspectiveCamera(40, innerWidth / innerHeight, 0.01, 50);
+const q = new URLSearchParams(location.search);
+cam.position.set(0, +(q.get('y') ?? 0.1), +(q.get('z') ?? 2.4)); cam.lookAt(0, 0, 0);
+// fondo: imagen del marcador como plano
+const tex = await new THREE.TextureLoader().loadAsync('../assets/marker/fiordo-target.png'); tex.colorSpace = THREE.SRGBColorSpace;
+scene.add(new THREE.Mesh(new THREE.PlaneGeometry(1, 1200/1020), new THREE.MeshBasicMaterial({ map: tex })));
+const p = createProduct(r, scene); scene.add(p.root); p.show();
+if (q.has('hide')) for (const n of q.get('hide').split(',')) p.root.traverse(o => { if (o.name === n) o.visible = false; });
+if (q.has('dbg')) p.root.traverse(o => { if (o.name === 'inner') { o.material.fragmentShader = o.material.fragmentShader.replace('gl_FragColor = vec4(col, a * opacity);', q.get('dbg') === '3' ? 'gl_FragColor = vec4(vec3(a * opacity), 1.0);' : q.get('dbg') === '2' ? 'gl_FragColor = vec4(col, 1.0);' : 'gl_FragColor = vec4(vH, 0.0, 0.0, 1.0);'); o.material.needsUpdate = true; } });
+const t = +(q.get('t') ?? 3);
+for (let i = 0; i < t * 30; i++) p.update(1/30, i/30);
+if (q.get('fx') === 'mist') { p.mist(); for (let i = 0; i < 18; i++) p.update(1/30, t + i/30); }
+r.render(scene, cam); window.__done = true;
+</script></body></html>

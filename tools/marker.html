@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Oswald;font-weight:700;src:url(../assets/fonts/oswald-latin-700-normal.woff2)}
+@font-face{font-family:Oswald;font-weight:500;src:url(../assets/fonts/oswald-latin-500-normal.woff2)}
+@font-face{font-family:Inter;font-weight:400;src:url(../assets/fonts/inter-latin-400-normal.woff2)}
+html,body{margin:0;background:#1B2A35}
+#p{position:relative;width:1020px;height:1200px;background:#1B2A35;overflow:hidden;font-family:Oswald}
+.f1{position:absolute;inset:54px;border:4px solid #DDE7EC}
+.f2{position:absolute;inset:78px;border:2px solid #8FB8C9}
+.c{position:absolute;width:0;height:0}
+.tl{left:56px;top:56px;border-top:70px solid #8FB8C9;border-right:70px solid transparent}
+.tr{right:56px;top:56px;border-top:70px solid #8FB8C9;border-left:70px solid transparent}
+.bl{left:56px;bottom:56px;border-bottom:70px solid #8FB8C9;border-right:70px solid transparent}
+.br{right:56px;bottom:56px;border-bottom:70px solid #8FB8C9;border-left:70px solid transparent}
+.kicker{position:absolute;top:190px;width:100%;text-align:center;color:#8FB8C9;font-weight:500;font-size:46px;letter-spacing:.42em;padding-left:.42em;box-sizing:border-box}
+.title{position:absolute;top:335px;width:100%;text-align:center;color:#fff;font-weight:700;font-size:236px;line-height:1;letter-spacing:.02em}
+.mark{position:absolute;top:650px;left:120px;width:780px}
+.foot{position:absolute;bottom:150px;width:100%;text-align:center;color:#8FB8C9;font-weight:500;font-size:30px;letter-spacing:.36em;padding-left:.36em;box-sizing:border-box}
+.sub{position:absolute;bottom:205px;width:100%;text-align:center;color:#DDE7EC;font-family:Inter;font-size:28px;letter-spacing:.28em;padding-left:.28em;box-sizing:border-box}
+/* cristales de hielo sutiles: aportan puntos de anclaje al tracking sin romper el estilo plano */
+.ice{position:absolute;left:0;top:0}
+</style></head>
+<body><div id="p">
+  <svg class="ice" width="1020" height="1200" viewBox="0 0 1020 1200">
+    <g stroke="#2C4352" stroke-width="3" fill="none">
+      <path d="M150 880 l50 -32 l34 42 l-26 48 z M200 848 l8 -52 M234 890 l52 -8"/>
+      <path d="M860 860 l-30 -45 l-48 22 l12 52 z M830 815 l26 -40 M794 889 l-30 30 M860 860 l40 10"/>
+      <path d="M140 268 l40 14 l-4 40 l-40 -8 z M180 282 l30 -26"/>
+      <path d="M872 300 l-26 -34 l-30 20 l14 30 z M846 266 l-4 -20 M816 286 l-26 4"/>
+    </g>
+  </svg>
+  <div class="f1"></div><div class="f2"></div>
+  <div class="c tl"></div><div class="c tr"></div><div class="c bl"></div><div class="c br"></div>
+  <div class="kicker">FRESCURA DEL NORTE</div>
+  <div class="title">FIORDO</div>
+  <img class="mark" src="../assets/img/mark.svg">
+  <div class="sub">LOCIÓN PARA HOMBRE</div>
+  <div class="foot">REALIDAD AUMENTADA</div>
+</div></body></html>

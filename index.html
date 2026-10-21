@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="utf-8">
+	<title>FIORDO — Frescura del Norte · Realidad Aumentada</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+	<meta name="description" content="FIORDO, loción facial para hombre inspirada en los fiordos escandinavos. Experiencia de realidad aumentada.">
+	<meta name="theme-color" content="#1B2A35">
+	<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+	<link rel="preload" href="assets/fonts/oswald-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+	<link rel="preload" href="assets/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+	<link rel="stylesheet" href="css/style.css">
+
+	<script type="importmap">
+	{
+		"imports": {
+			"three": "./js/lib/three.module.js",
+			"three/addons/": "./js/lib/addons/"
+		}
+	}
+	</script>
+</head>
+
+<body>
+
+	<!-- Escena AR (MindAR inserta aquí el video de la cámara y el canvas WebGL) -->
+	<div id="ar-container" aria-hidden="true"></div>
+
+	<!-- ===================== PANTALLA DE INICIO ===================== -->
+	<section id="splash" class="screen is-active">
+		<div class="splash-mist" aria-hidden="true"></div>
+
+		<header class="splash-head">
+			<p class="kicker">Frescura del Norte</p>
+			<h1 class="wordmark">FIORDO</h1>
+			<span class="wordmark-rule" aria-hidden="true"></span>
+			<p class="tagline">Loción facial para hombre</p>
+		</header>
+
+		<div class="splash-body">
+			<p class="lead">Escanea el empaque y descubre la loción inspirada en el hielo, la piedra y el agua fría de los fiordos escandinavos.</p>
+
+			<button id="start-button" class="btn btn-primary" type="button">
+				<span>Iniciar experiencia</span>
+				<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+			</button>
+
+			<button id="face-button" class="btn btn-ghost" type="button">
+				<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M3.5 7l17 10M20.5 7l-17 10M12 6l-2-2M12 6l2-2M12 18l-2 2M12 18l2 2"/></svg>
+				<span>Probar filtro ICE</span>
+			</button>
+
+			<div id="progress" class="progress" role="status" aria-live="polite">
+				<div class="progress-track"><div id="progress-fill" class="progress-fill"></div></div>
+				<p id="progress-label" class="progress-label">Preparando…</p>
+			</div>
+
+			<a class="marker-link" href="assets/marker/fiordo-target.png" target="_blank" rel="noopener">
+				¿No tienes el empaque? Abre la imagen de seguimiento
+			</a>
+		</div>
+
+		<footer class="splash-foot">
+			<img class="splash-mark" src="assets/img/mark.svg" alt="" aria-hidden="true">
+			<p>Realidades Expandidas · Santiago Poveda · Juan Diego Acosta</p>
+		</footer>
+	</section>
+
+	<!-- ===================== INTERFAZ AR ===================== -->
+	<section id="hud" class="screen" aria-label="Experiencia de realidad aumentada">
+
+		<div class="hud-top">
+			<div class="hud-brand">
+				<span class="hud-logo">FIORDO</span>
+				<span id="mode-label" class="hud-mode">Empaque AR</span>
+			</div>
+			<div class="hud-actions">
+				<button id="mode-toggle" class="icon-btn" type="button" aria-label="Cambiar a filtro facial ICE" title="Filtro ICE">
+					<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M3.5 7l17 10M20.5 7l-17 10"/></svg>
+				</button>
+				<button id="sound-toggle" class="icon-btn" type="button" aria-label="Silenciar" aria-pressed="false" title="Sonido">
+					<svg class="ico-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4zM16 9a4 4 0 010 6M18.5 6.5a7.5 7.5 0 010 11"/></svg>
+					<svg class="ico-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4zM17 9l5 6M22 9l-5 6"/></svg>
+				</button>
+			</div>
+		</div>
+
+		<div id="scan-hint" class="scan-hint">
+			<div class="scan-frame" aria-hidden="true"><i></i><i></i><i></i><i></i><span class="scan-line"></span></div>
+			<p id="scan-text">Apunta la cámara a la imagen FIORDO</p>
+		</div>
+
+		<p id="face-hint" class="face-hint">Mira a la cámara · la escarcha del norte aparece en tu rostro</p>
+
+		<nav class="dock" aria-label="Información del producto">
+			<button class="dock-btn" type="button" data-dialog="origen">
+				<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 16h6l3-5 3 7 3-5 1 3h4M5 20h3M10 20h4M16 20h3"/></svg>
+				<span>Origen</span>
+			</button>
+			<button class="dock-btn" type="button" data-dialog="formula">
+				<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3 4 6 7.3 6 11a6 6 0 01-12 0c0-3.7 3-7 6-11zM9.5 15a2.6 2.6 0 002.5 2.5"/></svg>
+				<span>Fórmula</span>
+			</button>
+			<button class="dock-btn" type="button" data-dialog="ritual">
+				<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20V8M7 12l5-5 5 5M6 4h12"/></svg>
+				<span>Ritual</span>
+			</button>
+		</nav>
+
+		<div id="toast" class="toast" role="status" aria-live="polite"></div>
+	</section>
+
+	<!-- ===================== DIÁLOGOS ===================== -->
+	<div id="dialog-backdrop" class="dialog-backdrop" hidden></div>
+	<article id="dialog" class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title" hidden>
+		<button id="dialog-close" class="dialog-close" type="button" aria-label="Cerrar">
+			<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+		</button>
+		<p id="dialog-kicker" class="dialog-kicker"></p>
+		<h2 id="dialog-title" class="dialog-title"></h2>
+		<div id="dialog-body" class="dialog-body"></div>
+		<div class="dialog-foot">
+			<span>FIORDO — Loción para hombre</span>
+			<span id="dialog-count"></span>
+		</div>
+	</article>
+
+	<!-- Error -->
+	<div id="error" class="error" role="alertdialog" aria-labelledby="error-title" hidden>
+		<div class="error-card">
+			<h2 id="error-title">No pudimos iniciar la cámara</h2>
+			<p id="error-text"></p>
+			<button id="error-retry" class="btn btn-primary" type="button"><span>Reintentar</span></button>
+		</div>
+	</div>
+
+	<noscript><p class="noscript">Esta experiencia necesita JavaScript.</p></noscript>
+
+	<script type="module" src="js/main.js"></script>
+</body>
+</html>
